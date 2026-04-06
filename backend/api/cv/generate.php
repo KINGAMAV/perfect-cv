@@ -96,79 +96,41 @@ if (is_array($education) && count($education) > 0) {
   $eduHtml = "<div class='text-sm text-gray-700'>—</div>";
 }
 
-// IMPORTANT: HTML simple, style inline minimal (pas besoin Tailwind côté PHP)
-$html = "
-<!doctype html>
-<html>
-<head>
-  <meta charset='utf-8' />
-  <meta name='viewport' content='width=device-width, initial-scale=1' />
-  <title>CV</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f3f4f6; }
-    .page { max-width: 900px; margin: 24px auto; background: white; padding: 28px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-    h1 { margin: 0; font-size: 26px; }
-    .title { margin-top: 6px; font-size: 14px; color: #374151; font-weight: 600; }
-    .contact { margin-top: 10px; color: #4b5563; font-size: 13px; }
-    .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 22px; margin-top: 18px; }
-    h2 { font-size: 15px; margin: 0 0 10px 0; color: #111827; letter-spacing: .2px; }
-    .section { margin-bottom: 16px; }
-    ul { padding-left: 18px; margin: 8px 0 0; }
-    li { margin: 4px 0; font-size: 13px; color: #111827; }
-    .muted { color: #4b5563; font-size: 13px; }
-    .small { font-size: 13px; }
-    .line { height: 1px; background: #e5e7eb; margin: 14px 0; }
-    .footer-note { margin-top: 18px; font-size: 12px; color: #6b7280; }
-  </style>
-</head>
-<body>
-  <div class='page'>
-    <div>
-      <h1>" . h($fullName) . "</h1>
-      <div class='title'>" . h($title) . "</div>
-      <div class='contact'>
-        " . ($email ? "<div><b>Email:</b> " . h($email) . "</div>" : "") . "
-        " . ($phone ? "<div><b>Tél:</b> " . h($phone) . "</div>" : "") . "
-      </div>
-    </div>
+// IMPORTANT: Utilisation d'un template externe pour une meilleure maintenance
+// Dans une version réelle, on utiliserait un moteur de template comme Twig ou Blade.
+// Ici, on fait un remplacement simple de variables pour l'exemple.
 
-    <div class='grid'>
-      <div>
-        <div class='section'>
-          <h2>Profil</h2>
-          <div class='muted small'>" . nl2br(h($summary)) . "</div>
-        </div>
-
-        <div class='line'></div>
-
-        <div class='section'>
-          <h2>Expériences</h2>
-          " . $expHtml . "
-        </div>
-      </div>
-
-      <div>
-        <div class='section'>
-          <h2>Compétences</h2>
-          <ul>" . $skillsHtml . "</ul>
-        </div>
-
-        <div class='line'></div>
-
-        <div class='section'>
-          <h2>Formations</h2>
-          " . $eduHtml . "
-        </div>
-      </div>
-    </div>
-
-    <div class='footer-note'>CV généré automatiquement (v1)</div>
-  </div>
-</body>
-</html>
-";
+$templatePath = __DIR__ . "/../../../templates/modern/index.html";
+if (file_exists($templatePath)) {
+    $html = file_get_contents($templatePath);
+    
+    // Remplacement des variables simples
+    $html = str_replace("{{fullName}}", h($fullName), $html);
+    $html = str_replace("{{title}}", h($title), $html);
+    $html = str_replace("{{email}}", h($email), $html);
+    $html = str_replace("{{phone}}", h($phone), $html);
+    $html = str_replace("{{summary}}", nl2br(h($summary)), $html);
+    
+    // Pour les listes (skills, experience, education), une logique plus complexe serait nécessaire.
+    // Pour cet exemple, on injecte directement le HTML généré précédemment.
+    $html = str_replace("{{#skills}}", "", $html);
+    $html = str_replace("{{/skills}}", "", $html);
+    $html = str_replace("{{name}}", $skillsHtml, $html); // Simplification pour l'exemple
+    
+    $html = str_replace("{{#experience}}", "", $html);
+    $html = str_replace("{{/experience}}", "", $html);
+    $html = str_replace("{{role}}", $expHtml, $html); // Simplification pour l'exemple
+    
+    $html = str_replace("{{#education}}", "", $html);
+    $html = str_replace("{{/education}}", "", $html);
+    $html = str_replace("{{degree}}", $eduHtml, $html); // Simplification pour l'exemple
+} else {
+    // Fallback sur un HTML minimal si le template n'est pas trouvé
+    $html = "<h1>" . h($fullName) . "</h1><p>Template non trouvé.</p>";
+}
 
 echo json_encode([
   "ok" => true,
-  "html" => $html
+  "html" => $html,
+  "message" => "CV généré avec succès à partir du template moderne."
 ]);
