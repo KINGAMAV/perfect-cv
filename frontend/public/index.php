@@ -6,7 +6,7 @@
     <title>Perfect CV - Générateur de CV Intelligent</title>
     <!-- Utilisation de Tailwind CSS via CDN pour le prototype -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body class="bg-gray-50 font-sans text-gray-900">
 
@@ -128,6 +128,6 @@
         </div>
     </footer>
 
-    <script src="js/app.js"></script>
+    <script src="../src/js/app.js"></script>
 </body>
 </html>

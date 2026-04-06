@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function generateCv(cvData) {
     try {
-        const response = await fetch('/backend/api/cv/generate.php', {
+        const response = await fetch('../../backend/api/cv/generate.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
