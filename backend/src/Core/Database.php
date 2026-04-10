@@ -29,7 +29,7 @@ class Database {
                 $this->username,
                 $this->password,
                 [
-                    PDO::ATTR_ERR_MODE => PDO::ERR_MODE_EXCEPTION,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]

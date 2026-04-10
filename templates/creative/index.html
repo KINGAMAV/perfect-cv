@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template CV Créatif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { background: white; }
+            .no-print { display: none; }
+        }
+        .cv-container {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .accent-bar {
+            width: 4px;
+            background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 py-10">
+    <div class="cv-container">
+        <!-- Header Créatif -->
+        <header class="mb-10 pb-8 border-b-4 border-purple-600">
+            <div class="flex items-baseline justify-between">
+                <div>
+                    <h1 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
+                        {{fullName}}
+                    </h1>
+                    <p class="text-2xl text-gray-600 mt-2">{{title}}</p>
+                </div>
+            </div>
+            <div class="flex gap-6 text-sm text-gray-600 mt-4">
+                <span>📧 {{email}}</span>
+                <span>📱 {{phone}}</span>
+            </div>
+        </header>
+
+        <!-- Profil -->
+        <section class="mb-8">
+            <div class="flex gap-3">
+                <div class="accent-bar"></div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900 mb-3">À propos</h2>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        {{summary}}
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compétences -->
+        <section class="mb-8">
+            <div class="flex gap-3">
+                <div class="accent-bar"></div>
+                <div class="w-full">
+                    <h2 class="text-lg font-bold text-gray-900 mb-3">Compétences</h2>
+                    <div class="grid grid-cols-2 gap-2">
+                        {{skillsHtml}}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expériences -->
+        <section class="mb-8">
+            <div class="flex gap-3">
+                <div class="accent-bar"></div>
+                <div class="w-full">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4">Expériences</h2>
+                    <div class="space-y-6">
+                        {{expHtml}}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formations -->
+        <section>
+            <div class="flex gap-3">
+                <div class="accent-bar"></div>
+                <div class="w-full">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4">Formations</h2>
+                    <div class="space-y-4">
+                        {{eduHtml}}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

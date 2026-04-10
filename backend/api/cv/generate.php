@@ -1,6 +1,6 @@
 <?php
-// CORS - pour autoriser ton front React
-header("Access-Control-Allow-Origin: http://localhost:5173");
+// CORS - pour autoriser les requêtes depuis le frontend
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
@@ -25,6 +25,20 @@ if (!$data) {
   exit;
 }
 
+// Template sélectionné
+$templateName = $data["template"] ?? "modern";
+$allowedTemplates = ['modern', 'minimal', 'creative'];
+
+// Valider le template
+if (!in_array($templateName, $allowedTemplates)) {
+  http_response_code(400);
+  echo json_encode([
+    "ok" => false,
+    "error" => "Template non valide"
+  ]);
+  exit;
+}
+
 // Données CV (avec valeurs par défaut)
 $fullName = $data["fullName"] ?? "Votre Nom";
 $title    = $data["title"] ?? "Développeur";
@@ -40,14 +54,22 @@ function h($str) {
   return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
 }
 
-// Générer HTML CV (1 page basique)
+// Générer HTML pour les compétences
 $skillsHtml = "";
 if (is_array($skills) && count($skills) > 0) {
   foreach ($skills as $s) {
-    $skillsHtml .= "<li>" . h($s) . "</li>";
+    $skillsHtml .= "<li class=\"flex items-center\"><span class=\"w-2 h-2 bg-indigo-500 rounded-full mr-2\"></span>" . h($s) . "</li>";
   }
 } else {
   $skillsHtml = "<li>—</li>";
+}
+
+// Générer HTML pour les compétences (format simple pour templates)
+$skillsText = "";
+if (is_array($skills) && count($skills) > 0) {
+  $skillsText = implode(", ", array_map('h', $skills));
+} else {
+  $skillsText = "—";
 }
 
 $expHtml = "";
@@ -60,18 +82,18 @@ if (is_array($experience) && count($experience) > 0) {
     $details = h($e["details"] ?? "");
 
     $expHtml .= "
-      <div class='mb-3'>
-        <div class='flex justify-between gap-3'>
-          <div class='font-semibold'>" . $role . "</div>
-          <div class='text-right text-sm text-gray-600'>" . $start . " - " . $end . "</div>
+      <div>
+        <div class=\"flex justify-between items-baseline\">
+          <h3 class=\"font-bold text-gray-900\">" . $role . "</h3>
+          <span class=\"text-xs font-semibold text-indigo-600\">" . $start . " - " . $end . "</span>
         </div>
-        <div class='text-gray-800'>" . $company . "</div>
-        <div class='text-sm text-gray-700 mt-1'>" . nl2br($details) . "</div>
+        <p class=\"text-sm text-gray-600 italic mb-2\">" . $company . "</p>
+        <p class=\"text-sm text-gray-700\">" . nl2br($details) . "</p>
       </div>
     ";
   }
 } else {
-  $expHtml = "<div class='text-sm text-gray-700'>—</div>";
+  $expHtml = "<div class=\"text-sm text-gray-700\">—</div>";
 }
 
 $eduHtml = "";
@@ -83,24 +105,24 @@ if (is_array($education) && count($education) > 0) {
     $end = h($ed["end"] ?? "");
 
     $eduHtml .= "
-      <div class='mb-2'>
-        <div class='flex justify-between gap-3'>
-          <div class='font-semibold'>" . $degree . "</div>
-          <div class='text-right text-sm text-gray-600'>" . $start . " - " . $end . "</div>
+      <div>
+        <div class=\"flex justify-between items-baseline\">
+          <h3 class=\"font-bold text-gray-900\">" . $degree . "</h3>
+          <span class=\"text-xs font-semibold text-indigo-600\">" . $start . " - " . $end . "</span>
         </div>
-        <div class='text-gray-800'>" . $school . "</div>
+        <p class=\"text-sm text-gray-600\">" . $school . "</p>
       </div>
     ";
   }
 } else {
-  $eduHtml = "<div class='text-sm text-gray-700'>—</div>";
+  $eduHtml = "<div class=\"text-sm text-gray-700\">—</div>";
 }
 
 // IMPORTANT: Utilisation d'un template externe pour une meilleure maintenance
 // Dans une version réelle, on utiliserait un moteur de template comme Twig ou Blade.
 // Ici, on fait un remplacement simple de variables pour l'exemple.
 
-$templatePath = __DIR__ . "/../../../templates/modern/index.html";
+$templatePath = __DIR__ . "/../../../templates/" . $templateName . "/index.html";
 if (file_exists($templatePath)) {
     $html = file_get_contents($templatePath);
     
@@ -111,19 +133,11 @@ if (file_exists($templatePath)) {
     $html = str_replace("{{phone}}", h($phone), $html);
     $html = str_replace("{{summary}}", nl2br(h($summary)), $html);
     
-    // Pour les listes (skills, experience, education), une logique plus complexe serait nécessaire.
-    // Pour cet exemple, on injecte directement le HTML généré précédemment.
-    $html = str_replace("{{#skills}}", "", $html);
-    $html = str_replace("{{/skills}}", "", $html);
-    $html = str_replace("{{name}}", $skillsHtml, $html); // Simplification pour l'exemple
-    
-    $html = str_replace("{{#experience}}", "", $html);
-    $html = str_replace("{{/experience}}", "", $html);
-    $html = str_replace("{{role}}", $expHtml, $html); // Simplification pour l'exemple
-    
-    $html = str_replace("{{#education}}", "", $html);
-    $html = str_replace("{{/education}}", "", $html);
-    $html = str_replace("{{degree}}", $eduHtml, $html); // Simplification pour l'exemple
+    // Remplacement des sections HTML (pour formats avancés)
+    $html = str_replace("{{skillsHtml}}", $skillsHtml, $html);
+    $html = str_replace("{{skillsText}}", $skillsText, $html);
+    $html = str_replace("{{expHtml}}", $expHtml, $html);
+    $html = str_replace("{{eduHtml}}", $eduHtml, $html);
 } else {
     // Fallback sur un HTML minimal si le template n'est pas trouvé
     $html = "<h1>" . h($fullName) . "</h1><p>Template non trouvé.</p>";
@@ -132,5 +146,5 @@ if (file_exists($templatePath)) {
 echo json_encode([
   "ok" => true,
   "html" => $html,
-  "message" => "CV généré avec succès à partir du template moderne."
+  "message" => "CV généré avec succès à partir du template " . $templateName . "."
 ]);

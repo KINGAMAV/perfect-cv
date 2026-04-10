@@ -1,4 +1,4 @@
-# Perfect CV - Générateur de CV Intelligent 🚀
+# Perfect CV - Générateur de CV 🚀
 
 Perfect CV est une application web permettant de générer des CV professionnels optimisés en fonction du modèle choisi et du domaine visé.
 
@@ -59,8 +59,4 @@ Ouvrez votre navigateur et accédez à :
 - [x] Génération de CV à partir de templates.
 - [x] Base de données relationnelle complète.
 
-## 🤝 Contribution
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
 
----
-Développé avec ❤️ par **Manus AI** pour **KINGAMAV**.

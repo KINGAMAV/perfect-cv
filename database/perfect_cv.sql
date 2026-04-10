@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `InformationsPersonnelles` (
     `adresse` VARCHAR(255),
     `lien_linkedin` VARCHAR(255),
     `lien_github` VARCHAR(255),
+    `photo_url` VARCHAR(500),
     `resume_personnel` TEXT,
     FOREIGN KEY (`cv_id`) REFERENCES `CV`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

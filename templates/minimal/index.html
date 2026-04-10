@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template CV Minimaliste</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { background: white; }
+            .no-print { display: none; }
+        }
+        .cv-container {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 py-10">
+    <div class="cv-container">
+        <!-- Header Minimaliste -->
+        <header class="pb-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">{{fullName}}</h1>
+            <p class="text-gray-600 text-sm">{{title}}</p>
+            <div class="flex gap-4 text-xs text-gray-600 mt-2">
+                <p>{{email}}</p>
+                <p>{{phone}}</p>
+            </div>
+        </header>
+
+        <!-- Profil -->
+        <section class="mb-6">
+            <p class="text-sm text-gray-700 leading-relaxed">
+                {{summary}}
+            </p>
+        </section>
+
+        <!-- Expériences -->
+        <section class="mb-6">
+            <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Expériences</h2>
+            <div class="space-y-4 text-sm">
+                {{expHtml}}
+            </div>
+        </section>
+
+        <!-- Formations -->
+        <section class="mb-6">
+            <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Formations</h2>
+            <div class="space-y-2 text-sm">
+                {{eduHtml}}
+            </div>
+        </section>
+
+        <!-- Compétences -->
+        <section>
+            <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Compétences</h2>
+            <p class="text-sm text-gray-700">
+                {{skillsText}}
+            </p>
+        </section>
+    </div>
+</body>
+</html>
